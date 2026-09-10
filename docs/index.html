@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>质检承诺边界 · Vision Promise Boundary</title>
+  <meta name="description" content="离散制造视觉／质检对外承诺前的拒单与边界清单。谈落地时先跑一遍，再写进报价与宣传。" />
+  <meta name="author" content="無為" />
+  <link rel="stylesheet" href="assets/style.css" />
+</head>
+<body>
+  <div class="wrap">
+    <header class="app-header">
+      <div class="brand">
+        <h1>质检承诺边界</h1>
+        <span class="en">vision-promise-boundary</span>
+      </div>
+      <p class="tagline">对外承诺检测速度／误报／节拍前，先跑一遍拒单与边界清单。</p>
+      <p class="meta">面向厂老板、交付、销售 · 谈视觉／质检落地时用 · <span id="rules-meta">加载规则中…</span></p>
+    </header>
+
+    <p id="loading" class="loading">正在加载规则…</p>
+
+    <div id="app-main" class="layout" hidden>
+      <section class="panel" aria-labelledby="input-title">
+        <h2 id="input-title">场景输入</h2>
+        <form id="scenario-form" autocomplete="off">
+          <div class="field">
+            <label class="main-label" for="industry">行业环节</label>
+            <input type="text" id="industry" name="industry" value="离散制造" placeholder="默认：离散制造" />
+          </div>
+
+          <label class="checkbox-row">
+            <input type="checkbox" id="hasTaktNumber" name="hasTaktNumber" />
+            <span>是否有节拍数字（产线已对齐的 cycle time）</span>
+          </label>
+
+          <label class="checkbox-row">
+            <input type="checkbox" id="clientWantsSpeedPromise" name="clientWantsSpeedPromise" />
+            <span>客户是否已要求「检测速度」承诺</span>
+          </label>
+
+          <div class="field">
+            <span class="main-label">误报代价</span>
+            <div class="fp-cost-group" role="group" aria-label="误报代价">
+              <label><input type="checkbox" name="fpCost" value="返工" /> 返工</label>
+              <label><input type="checkbox" name="fpCost" value="停线" /> 停线</label>
+              <label><input type="checkbox" name="fpCost" value="客诉" /> 客诉</label>
+            </div>
+          </div>
+
+          <label class="checkbox-row">
+            <input type="checkbox" id="hasRecentFalsePositiveSamples" name="hasRecentFalsePositiveSamples" />
+            <span>是否有近两周误报样本表</span>
+          </label>
+
+          <label class="checkbox-row">
+            <input type="checkbox" id="hasRunExperimentOrCopyTest" name="hasRunExperimentOrCopyTest" />
+            <span>是否上线过实验／改文案</span>
+          </label>
+
+          <label class="checkbox-row">
+            <input type="checkbox" id="dataDesensitizedForExternal" name="dataDesensitizedForExternal" />
+            <span>数据是否脱敏可对外</span>
+          </label>
+
+          <label class="checkbox-row">
+            <input type="checkbox" id="clientConfirmedPublicScreenshot" name="clientConfirmedPublicScreenshot" />
+            <span>客户是否已确认脱敏截图可上公众号／宣传</span>
+          </label>
+
+          <label class="checkbox-row">
+            <input type="checkbox" id="hasHumanRedlineApproval" name="hasHumanRedlineApproval" />
+            <span>是否有人批红线</span>
+          </label>
+
+          <label class="checkbox-row">
+            <input type="checkbox" id="askIncludesPaymentOrLineParams" name="askIncludesPaymentOrLineParams" />
+            <span>本次诉求是否包含支付／改产线参数（越权项）</span>
+          </label>
+
+          <div class="field">
+            <label class="main-label" for="promisedCycleTime">承诺节拍／周期时间（可选）</label>
+            <input type="text" id="promisedCycleTime" name="promisedCycleTime" placeholder="例：2.5s / 节拍内完成" />
+            <p class="hint">无节拍数字却填写此处 → 将触发拒单</p>
+          </div>
+
+          <div class="field">
+            <label class="main-label" for="claimedSpeedText">拟对外速度话术（可选）</label>
+            <input type="text" id="claimedSpeedText" name="claimedSpeedText" placeholder="例：检测速度可达产线节拍" />
+          </div>
+
+          <div class="actions">
+            <button type="button" class="primary" id="btn-eval">重新评估</button>
+            <button type="button" class="danger" id="btn-dangerous">危险承诺预设</button>
+            <button type="button" id="btn-reset">重置</button>
+          </div>
+        </form>
+      </section>
+
+      <section class="panel" aria-labelledby="output-title">
+        <h2 id="output-title">边界输出</h2>
+        <div class="lists">
+          <div class="list-block allow" id="list-allow">
+            <h3>可承诺 <span class="count">0</span></h3>
+            <div class="body"></div>
+          </div>
+          <div class="list-block defer" id="list-defer">
+            <h3>暂缓 <span class="count">0</span></h3>
+            <div class="body"></div>
+          </div>
+          <div class="list-block reject" id="list-reject">
+            <h3>明确拒单 <span class="count">0</span></h3>
+            <div class="body"></div>
+          </div>
+        </div>
+        <div class="actions">
+          <button type="button" class="primary" id="btn-copy">复制 Markdown</button>
+        </div>
+      </section>
+    </div>
+
+    <footer class="app-footer">
+      <p><strong>说明：</strong>本页为结构演示工具，用于交付／销售对齐「能承诺什么」。规则见 <code>rules.json</code>，可本地改后刷新。非法律意见，不作合同依据。</p>
+      <p>開源 · MIT · <a href="https://github.com/bianwuwei/vision-promise-boundary">GitHub</a> · 無為</p>
+    </footer>
+  </div>
+
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+  <script src="assets/app.js"></script>
+</body>
+</html>
