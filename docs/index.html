@@ -12,121 +12,122 @@
   <div class="wrap">
     <header class="app-header">
       <div class="brand">
-        <h1>质检承诺边界</h1>
+        <h1 data-i18n="title">质检承诺边界</h1>
         <span class="en">vision-promise-boundary</span>
+        <button type="button" id="lang-toggle" class="lang-toggle" aria-label="切换语言 / Switch language"><span data-lang="zh">中文</span> / <span data-lang="en">EN</span></button>
       </div>
-      <p class="tagline">一线踩出来的经验：对外承诺检测速度／误报／节拍前，先跑一遍拒单与边界清单。</p>
-      <p class="meta">面向评估供应商的甲方，以及谈落地的交付／销售 · <span id="rules-meta">加载规则中…</span></p>
+      <p class="tagline" data-i18n="tagline">一线踩出来的经验：对外承诺检测速度／误报／节拍前，先跑一遍拒单与边界清单。</p>
+      <p class="meta"><span data-i18n="audience">面向评估供应商的甲方，以及谈落地的交付／销售</span> · <span id="rules-meta" data-i18n="rulesLoading">加载规则中…</span></p>
     </header>
 
-    <p id="loading" class="loading">正在加载规则…</p>
+    <p id="loading" class="loading" data-i18n="loading">正在加载规则…</p>
 
     <div id="app-main" class="layout" hidden>
       <section class="panel" aria-labelledby="input-title">
-        <h2 id="input-title">场景输入</h2>
+        <h2 id="input-title" data-i18n="inputTitle">场景输入</h2>
         <form id="scenario-form" autocomplete="off">
           <div class="field">
-            <label class="main-label" for="industry">行业环节</label>
-            <input type="text" id="industry" name="industry" value="离散制造" placeholder="默认：离散制造" />
+            <label class="main-label" for="industry" data-i18n="industry">行业环节</label>
+            <input type="text" id="industry" name="industry" value="离散制造" placeholder="默认：离散制造" data-i18n-placeholder="industryPh" />
           </div>
 
           <label class="checkbox-row">
             <input type="checkbox" id="hasTaktNumber" name="hasTaktNumber" />
-            <span>是否有节拍数字（产线已对齐的 cycle time）</span>
+            <span data-i18n="hasTaktNumber">是否有节拍数字（产线已对齐的 cycle time）</span>
           </label>
 
           <label class="checkbox-row">
             <input type="checkbox" id="clientWantsSpeedPromise" name="clientWantsSpeedPromise" />
-            <span>客户是否已要求「检测速度」承诺</span>
+            <span data-i18n="clientWantsSpeedPromise">客户是否已要求「检测速度」承诺</span>
           </label>
 
           <div class="field">
-            <span class="main-label">误报代价</span>
-            <div class="fp-cost-group" role="group" aria-label="误报代价">
-              <label><input type="checkbox" name="fpCost" value="返工" /> 返工</label>
-              <label><input type="checkbox" name="fpCost" value="停线" /> 停线</label>
-              <label><input type="checkbox" name="fpCost" value="客诉" /> 客诉</label>
+            <span class="main-label" data-i18n="fpCost">误报代价</span>
+            <div class="fp-cost-group" role="group" aria-label="误报代价" data-i18n-aria-label="fpCost">
+              <label><input type="checkbox" name="fpCost" value="返工" /> <span data-i18n="fpRework">返工</span></label>
+              <label><input type="checkbox" name="fpCost" value="停线" /> <span data-i18n="fpLineStop">停线</span></label>
+              <label><input type="checkbox" name="fpCost" value="客诉" /> <span data-i18n="fpComplaint">客诉</span></label>
             </div>
           </div>
 
           <label class="checkbox-row">
             <input type="checkbox" id="hasRecentFalsePositiveSamples" name="hasRecentFalsePositiveSamples" />
-            <span>是否有近两周误报样本表</span>
+            <span data-i18n="hasRecentFalsePositiveSamples">是否有近两周误报样本表</span>
           </label>
 
           <label class="checkbox-row">
             <input type="checkbox" id="hasRunExperimentOrCopyTest" name="hasRunExperimentOrCopyTest" />
-            <span>是否上线过实验／改文案</span>
+            <span data-i18n="hasRunExperimentOrCopyTest">是否上线过实验／改文案</span>
           </label>
 
           <label class="checkbox-row">
             <input type="checkbox" id="dataDesensitizedForExternal" name="dataDesensitizedForExternal" />
-            <span>数据是否脱敏可对外</span>
+            <span data-i18n="dataDesensitizedForExternal">数据是否脱敏可对外</span>
           </label>
 
           <label class="checkbox-row">
             <input type="checkbox" id="clientConfirmedPublicScreenshot" name="clientConfirmedPublicScreenshot" />
-            <span>客户是否已确认脱敏截图可上公众号／宣传</span>
+            <span data-i18n="clientConfirmedPublicScreenshot">客户是否已确认脱敏截图可上公众号／宣传</span>
           </label>
 
           <label class="checkbox-row">
             <input type="checkbox" id="hasHumanRedlineApproval" name="hasHumanRedlineApproval" />
-            <span>是否有人批红线</span>
+            <span data-i18n="hasHumanRedlineApproval">是否有人批红线</span>
           </label>
 
           <label class="checkbox-row">
             <input type="checkbox" id="askIncludesPaymentOrLineParams" name="askIncludesPaymentOrLineParams" />
-            <span>本次诉求是否包含支付／改产线参数（越权项）</span>
+            <span data-i18n="askIncludesPaymentOrLineParams">本次诉求是否包含支付／改产线参数（越权项）</span>
           </label>
 
           <div class="field">
-            <label class="main-label" for="promisedCycleTime">承诺节拍／周期时间（可选）</label>
-            <input type="text" id="promisedCycleTime" name="promisedCycleTime" placeholder="例：2.5s / 节拍内完成" />
-            <p class="hint">无节拍数字却填写此处 → 将触发拒单</p>
+            <label class="main-label" for="promisedCycleTime" data-i18n="promisedCycleTime">承诺节拍／周期时间（可选）</label>
+            <input type="text" id="promisedCycleTime" name="promisedCycleTime" placeholder="例：2.5s / 节拍内完成" data-i18n-placeholder="promisedCycleTimePh" />
+            <p class="hint" data-i18n="promisedCycleTimeHint">无节拍数字却填写此处 → 将触发拒单</p>
           </div>
 
           <div class="field">
-            <label class="main-label" for="claimedSpeedText">拟对外速度话术（可选）</label>
-            <input type="text" id="claimedSpeedText" name="claimedSpeedText" placeholder="例：检测速度可达产线节拍" />
+            <label class="main-label" for="claimedSpeedText" data-i18n="claimedSpeedText">拟对外速度话术（可选）</label>
+            <input type="text" id="claimedSpeedText" name="claimedSpeedText" placeholder="例：检测速度可达产线节拍" data-i18n-placeholder="claimedSpeedTextPh" />
           </div>
 
           <div class="actions">
-            <button type="button" class="primary" id="btn-eval">重新评估</button>
-            <button type="button" class="danger" id="btn-dangerous">危险承诺预设</button>
-            <button type="button" id="btn-reset">重置</button>
+            <button type="button" class="primary" id="btn-eval" data-i18n="btnEval">重新评估</button>
+            <button type="button" class="danger" id="btn-dangerous" data-i18n="btnDangerous">危险承诺预设</button>
+            <button type="button" id="btn-reset" data-i18n="btnReset">重置</button>
           </div>
         </form>
       </section>
 
       <section class="panel" aria-labelledby="output-title">
-        <h2 id="output-title">边界输出</h2>
+        <h2 id="output-title" data-i18n="outputTitle">边界输出</h2>
         <div class="list-block next" id="list-next">
-          <h3>先补哪项证据 <span class="count">0</span></h3>
+          <h3><span data-i18n="nextTitle">先补哪项证据</span> <span class="count">0</span></h3>
           <div class="body"></div>
         </div>
         <div class="lists">
           <div class="list-block allow" id="list-allow">
-            <h3>可承诺 <span class="count">0</span></h3>
+            <h3><span data-i18n="allowTitle">可承诺</span> <span class="count">0</span></h3>
             <div class="body"></div>
           </div>
           <div class="list-block defer" id="list-defer">
-            <h3>暂缓 <span class="count">0</span></h3>
+            <h3><span data-i18n="deferTitle">暂缓</span> <span class="count">0</span></h3>
             <div class="body"></div>
           </div>
           <div class="list-block reject" id="list-reject">
-            <h3>明确拒单 <span class="count">0</span></h3>
+            <h3><span data-i18n="rejectTitle">明确拒单</span> <span class="count">0</span></h3>
             <div class="body"></div>
           </div>
         </div>
         <div class="actions">
-          <button type="button" class="primary" id="btn-copy">复制 Markdown</button>
+          <button type="button" class="primary" id="btn-copy" data-i18n="btnCopy">复制 Markdown</button>
         </div>
       </section>
     </div>
 
     <footer class="app-footer">
-      <p><strong>说明：</strong>本页把产线交付里踩过的坑固化成可编辑规则，供报价／宣传前自查。规则见 <code>rules.json</code>。非法律意见，不作合同依据。</p>
-      <p>開源 · MIT · <a href="https://github.com/bianwuwei/vision-promise-boundary">GitHub</a> · 無為</p>
+      <p data-i18n-html="footerNote"><strong>说明：</strong>本页把产线交付里踩过的坑固化成可编辑规则，供报价／宣传前自查。规则见 <code>rules.json</code>。非法律意见，不作合同依据。</p>
+      <p><span data-i18n="openSource">開源</span> · MIT · <a href="https://github.com/bianwuwei/vision-promise-boundary">GitHub</a> · 無為</p>
     </footer>
   </div>
 

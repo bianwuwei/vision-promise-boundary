@@ -413,3 +413,17 @@ footer.app-footer strong {
   color: #93c5fd;
   font-size: 0.8em;
 }
+
+/* Language toggle */
+button.lang-toggle {
+  margin-left: auto;
+  align-self: center;
+  padding: 0.2rem 0.6rem;
+  font-size: 0.8rem;
+  line-height: 1.4;
+  color: var(--text-dim);
+}
+button.lang-toggle span.active {
+  color: var(--text);
+  font-weight: 600;
+}

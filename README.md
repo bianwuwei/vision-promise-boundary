@@ -10,6 +10,8 @@
 
 面向：**正在评估视觉／质检供应商的甲方、正在谈落地的交付和销售团队**。
 
+**English:** Vision Promise Boundary is a field-tested checklist for industrial machine-vision QC projects. Before you promise inspection speed, false-positive rates or takt time in a quote or marketing copy, enter the deal scenario (measured takt / cycle time, cost of a false positive such as line stop or customer complaint, recent sample logs, red-line approval, desensitized data) and get an instant "OK to promise / Hold / Reject" verdict plus which evidence to collect first. The UI has a 中文 / EN toggle in the header. **[Try it in English → https://bianwuwei.github.io/vision-promise-boundary/?lang=en](https://bianwuwei.github.io/vision-promise-boundary/?lang=en)**
+
 ---
 
 ## 为什么会有这个东西
@@ -78,9 +80,10 @@ python3 -m http.server 8080
 | `when` | 条件（`all` / `any` + `eq` / `neq`） |
 | `outcome` | `allow` \| `defer` \| `reject` |
 | `message` | 中文说明 |
+| `message_en` | 英文说明（切到 EN 时显示；缺省则回退中文） |
 | `gaps` | 这条规则缺的证据（对应 `gaps` 表里的键），用来排序「先补哪项」 |
 
-文件顶层的 `gaps` 表给每项证据写了名字和下一步动作。排序方式：每条拒单算 3 分，每条暂缓算 1 分，按一项证据补齐后能解除的总分从高到低排。
+文件顶层的 `gaps` 表给每项证据写了名字和下一步动作（`label` / `action`，英文对应 `label_en` / `action_en`）。排序方式：每条拒单算 3 分，每条暂缓算 1 分，按一项证据补齐后能解除的总分从高到低排。
 
 改完保存，刷新页面即生效（无需构建）。引擎在 [`docs/assets/app.js`](docs/assets/app.js)。
 

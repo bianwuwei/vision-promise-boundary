@@ -1,5 +1,5 @@
 {
-  "version": "0.2",
+  "version": "0.3",
   "rules": [
     {
       "id": "R01-speed-without-takt",
@@ -17,6 +17,7 @@
       },
       "outcome": "reject",
       "message": "客户已要求「检测速度」承诺，但尚无节拍数字对齐——不单独对外承诺检测速度。",
+      "message_en": "The customer has asked for an inspection-speed promise, but no takt number has been agreed yet — do not promise inspection speed on its own to anyone outside.",
       "gaps": [
         "takt"
       ]
@@ -37,6 +38,7 @@
       },
       "outcome": "reject",
       "message": "客户要求速度承诺，且近两周无误报样本表——误报率未与产线节拍对齐前，拒绝对外承诺检测速度。",
+      "message_en": "The customer wants a speed promise, and there is no false-positive sample log from the last two weeks — until the false-positive rate is aligned with line takt, refuse to promise inspection speed externally.",
       "gaps": [
         "samples"
       ]
@@ -53,6 +55,7 @@
       },
       "outcome": "defer",
       "message": "无近两周误报样本 → 暂缓对外案例数字与误报率表述。",
+      "message_en": "No false-positive samples from the last two weeks → hold external case-study numbers and any false-positive-rate statements.",
       "gaps": [
         "samples"
       ]
@@ -69,6 +72,7 @@
       },
       "outcome": "defer",
       "message": "客户未确认脱敏截图可否上公众号／宣传 → 开放问题，不写进宣传承诺。",
+      "message_en": "The customer has not confirmed whether desensitized screenshots may go on the official account / marketing → treat as an open question; keep it out of marketing promises.",
       "gaps": [
         "screenshot"
       ]
@@ -89,6 +93,7 @@
       },
       "outcome": "reject",
       "message": "缺节拍数字却填写了承诺节拍／周期时间 → 明确拒单，先补齐产线节拍再谈承诺。",
+      "message_en": "A promised takt / cycle time was entered without a measured takt number → reject; get the line's takt time first, then talk about promises.",
       "gaps": [
         "takt"
       ]
@@ -105,6 +110,7 @@
       },
       "outcome": "reject",
       "message": "涉及支付／改产线参数类诉求——不在本工具范围，请另走审批流程。",
+      "message_en": "Requests involving payments or changing line parameters are outside the scope of this tool — route them through a separate approval process.",
       "gaps": [
         "scope"
       ]
@@ -121,6 +127,7 @@
       },
       "outcome": "defer",
       "message": "尚无人批红线 → 暂缓对外硬承诺，先完成内部红线评审。",
+      "message_en": "No red-line approval from a person yet → hold hard external commitments until the internal red-line review is done.",
       "gaps": [
         "redline"
       ]
@@ -141,6 +148,7 @@
       },
       "outcome": "reject",
       "message": "误报代价高（停线／客诉）且无近两周样本 → 拒绝对外承诺检测效果或误报上限。",
+      "message_en": "A false positive is costly (line stop / customer complaint) and there are no samples from the last two weeks → refuse to promise inspection performance or a false-positive ceiling externally.",
       "gaps": [
         "samples"
       ]
@@ -157,6 +165,7 @@
       },
       "outcome": "defer",
       "message": "尚未上线过实验／改文案验证 → 暂缓把实验性表述写成对外承诺。",
+      "message_en": "No pilot or copy test has been run live yet → hold off on turning experimental wording into an external promise.",
       "gaps": [
         "experiment"
       ]
@@ -173,6 +182,7 @@
       },
       "outcome": "defer",
       "message": "数据尚未脱敏可对外 → 暂缓对外展示原始图／表，先完成脱敏与合规确认。",
+      "message_en": "Data has not been desensitized for external use → hold off on showing raw images / tables externally until desensitization and compliance sign-off are done.",
       "gaps": [
         "desensitize"
       ]
@@ -201,6 +211,7 @@
       },
       "outcome": "reject",
       "message": "已填写速度话术，但节拍未对齐或无误报样本 → 拒单该速度话术，不得进入报价／宣传稿。",
+      "message_en": "A speed claim has been drafted, but takt is not aligned or there are no false-positive samples → reject this speed claim; it must not go into quotes or marketing copy.",
       "gaps": [
         "takt",
         "samples"
@@ -238,37 +249,52 @@
       },
       "outcome": "allow",
       "message": "节拍、样本、红线、脱敏与实验均具备，且无越权诉求——可在已对齐范围内做有限对外承诺。",
+      "message_en": "Takt, samples, red-line approval, desensitization and a pilot are all in place, with no out-of-scope requests — a limited external promise is OK within the aligned scope.",
       "gaps": []
     }
   ],
   "gaps": {
     "takt": {
       "label": "实测产线节拍",
-      "action": "到产线实测节拍（cycle time），拿到数字再谈速度和节拍承诺。"
+      "label_en": "Measured line takt",
+      "action": "到产线实测节拍（cycle time），拿到数字再谈速度和节拍承诺。",
+      "action_en": "Measure takt (cycle time) on the actual line; talk about speed and takt promises only once you have the number."
     },
     "samples": {
       "label": "近两周误报样本表",
-      "action": "采集近两周连续良品／废品样本并标注，算出误报率再谈效果数字。"
+      "label_en": "Last-two-weeks false-positive sample log",
+      "action": "采集近两周连续良品／废品样本并标注，算出误报率再谈效果数字。",
+      "action_en": "Collect and label two consecutive weeks of good / reject parts, compute the false-positive rate, then talk about performance numbers."
     },
     "redline": {
       "label": "内部红线审批",
-      "action": "找有权限的人批红线：哪些话能对外说、哪些不能。"
+      "label_en": "Internal red-line approval",
+      "action": "找有权限的人批红线：哪些话能对外说、哪些不能。",
+      "action_en": "Get someone with authority to sign off the red lines: what may and may not be said externally."
     },
     "desensitize": {
       "label": "数据脱敏",
-      "action": "把要对外展示的图和表做脱敏，并完成合规确认。"
+      "label_en": "Data desensitization",
+      "action": "把要对外展示的图和表做脱敏，并完成合规确认。",
+      "action_en": "Desensitize the images and tables to be shown externally, and complete compliance sign-off."
     },
     "screenshot": {
       "label": "客户确认截图可公开",
-      "action": "书面问客户：脱敏截图能不能上公众号或宣传材料。"
+      "label_en": "Customer OK to publish screenshots",
+      "action": "书面问客户：脱敏截图能不能上公众号或宣传材料。",
+      "action_en": "Ask the customer in writing whether desensitized screenshots may be used on the official account or in marketing materials."
     },
     "experiment": {
       "label": "小范围实验或文案验证",
-      "action": "先小范围上线实验或验证文案，再把表述写成对外承诺。"
+      "label_en": "Small-scale pilot or copy test",
+      "action": "先小范围上线实验或验证文案，再把表述写成对外承诺。",
+      "action_en": "Run a small-scale pilot or test the wording first, then turn it into an external promise."
     },
     "scope": {
       "label": "拆出越权诉求",
-      "action": "把支付、改产线参数这类诉求拆出去，另走审批流程。"
+      "label_en": "Split off out-of-scope requests",
+      "action": "把支付、改产线参数这类诉求拆出去，另走审批流程。",
+      "action_en": "Split off requests such as payments or line-parameter changes and route them through a separate approval process."
     }
   }
 }
