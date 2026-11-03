@@ -33,6 +33,8 @@
   };
 
   let rules = [];
+  let gaps = {};
+  var WEIGHT = { reject: 3, defer: 1 };
 
   function $(id) {
     return document.getElementById(id);
@@ -114,12 +116,63 @@
     var reject = [];
     ruleList.forEach(function (rule) {
       if (!matchCond(rule.when, state)) return;
-      var item = { id: rule.id, message: rule.message, outcome: rule.outcome };
+      var item = { id: rule.id, message: rule.message, outcome: rule.outcome, gaps: rule.gaps || [] };
       if (rule.outcome === "allow") allow.push(item);
       else if (rule.outcome === "defer") defer.push(item);
       else if (rule.outcome === "reject") reject.push(item);
     });
-    return { allow: allow, defer: defer, reject: reject };
+    var next = rankGaps(defer.concat(reject));
+    var order = {};
+    next.forEach(function (g, i) { order[g.key] = i; });
+    function rank(it) {
+      var best = 999;
+      it.gaps.forEach(function (k) { if (order[k] !== undefined && order[k] < best) best = order[k]; });
+      return best;
+    }
+    function byGap(a, b) { return rank(a) - rank(b); }
+    defer.sort(byGap);
+    reject.sort(byGap);
+    return { allow: allow, defer: defer, reject: reject, next: next };
+  }
+
+  /** Group triggered rules by the missing evidence behind them; rank by how much each one unblocks. */
+  function rankGaps(items) {
+    var map = {};
+    items.forEach(function (it) {
+      it.gaps.forEach(function (k) {
+        if (!map[k]) map[k] = { key: k, score: 0, reject: 0, defer: 0, ids: [] };
+        map[k].score += WEIGHT[it.outcome] || 0;
+        map[k][it.outcome] += 1;
+        map[k].ids.push(it.id);
+      });
+    });
+    return Object.keys(map)
+      .map(function (k) { return map[k]; })
+      .sort(function (a, b) { return b.score - a.score || b.reject - a.reject; });
+  }
+
+  function gapLabel(k) {
+    return (gaps[k] && gaps[k].label) || k;
+  }
+
+  function renderNext(el, next) {
+    el.querySelector(".count").textContent = String(next.length);
+    var body = el.querySelector(".body");
+    if (!next.length) {
+      body.innerHTML = '<p class="empty">没有缺的证据。</p>';
+      return;
+    }
+    var html = "<ol>";
+    next.forEach(function (g) {
+      var parts = [];
+      if (g.reject) parts.push("解除拒单 " + g.reject + " 条");
+      if (g.defer) parts.push("解除暂缓 " + g.defer + " 条");
+      html +=
+        "<li><strong>" + escapeHtml(gapLabel(g.key)) + "</strong>（" + parts.join("，") + "）<br>" +
+        escapeHtml((gaps[g.key] && gaps[g.key].action) || "") + "</li>";
+    });
+    html += "</ol>";
+    body.innerHTML = html;
   }
 
   function renderList(el, items, emptyText) {
@@ -136,6 +189,9 @@
         "<li><span class=\"rule-id\">" +
         escapeHtml(it.id) +
         "</span>" +
+        (it.gaps && it.gaps.length
+          ? '<span class="gap-tag">缺：' + it.gaps.map(gapLabel).map(escapeHtml).join("、") + "</span>"
+          : "") +
         escapeHtml(it.message) +
         "</li>";
     });
@@ -154,6 +210,7 @@
   function run() {
     var state = enrich(readState());
     var result = evaluate(state, rules);
+    renderNext($("list-next"), result.next);
     renderList($("list-allow"), result.allow, "当前无「可承诺」项——先补齐边界条件。");
     renderList($("list-defer"), result.defer, "无暂缓项。");
     renderList($("list-reject"), result.reject, "无拒单项。");
@@ -200,6 +257,19 @@
       });
       lines.push("");
     }
+
+    lines.push("## 先补哪项证据（" + result.next.length + "）");
+    lines.push("");
+    if (!result.next.length) {
+      lines.push("_无_");
+    }
+    result.next.forEach(function (g, i) {
+      var parts = [];
+      if (g.reject) parts.push("解除拒单 " + g.reject + " 条");
+      if (g.defer) parts.push("解除暂缓 " + g.defer + " 条");
+      lines.push((i + 1) + ". **" + gapLabel(g.key) + "**（" + parts.join("，") + "）：" + ((gaps[g.key] && gaps[g.key].action) || ""));
+    });
+    lines.push("");
 
     section("可承诺", result.allow);
     section("暂缓", result.defer);
@@ -298,6 +368,7 @@
       })
       .then(function (data) {
         rules = data.rules || [];
+        gaps = data.gaps || {};
         $("rules-meta").textContent = "规则 " + rules.length + " 条 · v" + (data.version || "?");
       });
   }
@@ -305,6 +376,7 @@
   // Expose for smoke tests
   window.VisionPromiseBoundary = {
     evaluate: evaluate,
+    rankGaps: rankGaps,
     enrich: enrich,
     matchCond: matchCond,
     buildMarkdown: buildMarkdown,

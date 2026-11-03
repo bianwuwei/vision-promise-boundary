@@ -1,138 +1,274 @@
 {
-  "version": "0.1",
+  "version": "0.2",
   "rules": [
     {
       "id": "R01-speed-without-takt",
       "when": {
         "all": [
-          { "field": "clientWantsSpeedPromise", "eq": true },
-          { "field": "hasTaktNumber", "eq": false }
+          {
+            "field": "clientWantsSpeedPromise",
+            "eq": true
+          },
+          {
+            "field": "hasTaktNumber",
+            "eq": false
+          }
         ]
       },
       "outcome": "reject",
-      "message": "客户已要求「检测速度」承诺，但尚无节拍数字对齐——不单独对外承诺检测速度。"
+      "message": "客户已要求「检测速度」承诺，但尚无节拍数字对齐——不单独对外承诺检测速度。",
+      "gaps": [
+        "takt"
+      ]
     },
     {
       "id": "R02-speed-without-samples",
       "when": {
         "all": [
-          { "field": "clientWantsSpeedPromise", "eq": true },
-          { "field": "hasRecentFalsePositiveSamples", "eq": false }
+          {
+            "field": "clientWantsSpeedPromise",
+            "eq": true
+          },
+          {
+            "field": "hasRecentFalsePositiveSamples",
+            "eq": false
+          }
         ]
       },
       "outcome": "reject",
-      "message": "客户要求速度承诺，且近两周无误报样本表——误报率未与产线节拍对齐前，拒绝对外承诺检测速度。"
+      "message": "客户要求速度承诺，且近两周无误报样本表——误报率未与产线节拍对齐前，拒绝对外承诺检测速度。",
+      "gaps": [
+        "samples"
+      ]
     },
     {
       "id": "R03-no-recent-samples-defer-numbers",
       "when": {
         "all": [
-          { "field": "hasRecentFalsePositiveSamples", "eq": false }
+          {
+            "field": "hasRecentFalsePositiveSamples",
+            "eq": false
+          }
         ]
       },
       "outcome": "defer",
-      "message": "无近两周误报样本 → 暂缓对外案例数字与误报率表述。"
+      "message": "无近两周误报样本 → 暂缓对外案例数字与误报率表述。",
+      "gaps": [
+        "samples"
+      ]
     },
     {
       "id": "R04-publicity-screenshot-unconfirmed",
       "when": {
         "all": [
-          { "field": "clientConfirmedPublicScreenshot", "eq": false }
+          {
+            "field": "clientConfirmedPublicScreenshot",
+            "eq": false
+          }
         ]
       },
       "outcome": "defer",
-      "message": "客户未确认脱敏截图可否上公众号／宣传 → 开放问题，不写进宣传承诺。"
+      "message": "客户未确认脱敏截图可否上公众号／宣传 → 开放问题，不写进宣传承诺。",
+      "gaps": [
+        "screenshot"
+      ]
     },
     {
       "id": "R05-takt-promise-without-number",
       "when": {
         "all": [
-          { "field": "hasTaktNumber", "eq": false },
-          { "field": "promisedCycleTime", "neq": "" }
+          {
+            "field": "hasTaktNumber",
+            "eq": false
+          },
+          {
+            "field": "promisedCycleTime",
+            "neq": ""
+          }
         ]
       },
       "outcome": "reject",
-      "message": "缺节拍数字却填写了承诺节拍／周期时间 → 明确拒单，先补齐产线节拍再谈承诺。"
+      "message": "缺节拍数字却填写了承诺节拍／周期时间 → 明确拒单，先补齐产线节拍再谈承诺。",
+      "gaps": [
+        "takt"
+      ]
     },
     {
       "id": "R06-out-of-scope-payment-or-line-params",
       "when": {
         "all": [
-          { "field": "askIncludesPaymentOrLineParams", "eq": true }
+          {
+            "field": "askIncludesPaymentOrLineParams",
+            "eq": true
+          }
         ]
       },
       "outcome": "reject",
-      "message": "涉及支付／改产线参数类诉求——不在本工具范围，请另走审批流程。"
+      "message": "涉及支付／改产线参数类诉求——不在本工具范围，请另走审批流程。",
+      "gaps": [
+        "scope"
+      ]
     },
     {
       "id": "R07-no-human-redline",
       "when": {
         "all": [
-          { "field": "hasHumanRedlineApproval", "eq": false }
+          {
+            "field": "hasHumanRedlineApproval",
+            "eq": false
+          }
         ]
       },
       "outcome": "defer",
-      "message": "尚无人批红线 → 暂缓对外硬承诺，先完成内部红线评审。"
+      "message": "尚无人批红线 → 暂缓对外硬承诺，先完成内部红线评审。",
+      "gaps": [
+        "redline"
+      ]
     },
     {
       "id": "R08-high-fp-cost-no-samples",
       "when": {
         "all": [
-          { "field": "falsePositiveCostHigh", "eq": true },
-          { "field": "hasRecentFalsePositiveSamples", "eq": false }
+          {
+            "field": "falsePositiveCostHigh",
+            "eq": true
+          },
+          {
+            "field": "hasRecentFalsePositiveSamples",
+            "eq": false
+          }
         ]
       },
       "outcome": "reject",
-      "message": "误报代价高（停线／客诉）且无近两周样本 → 拒绝对外承诺检测效果或误报上限。"
+      "message": "误报代价高（停线／客诉）且无近两周样本 → 拒绝对外承诺检测效果或误报上限。",
+      "gaps": [
+        "samples"
+      ]
     },
     {
       "id": "R09-no-experiment-yet",
       "when": {
         "all": [
-          { "field": "hasRunExperimentOrCopyTest", "eq": false }
+          {
+            "field": "hasRunExperimentOrCopyTest",
+            "eq": false
+          }
         ]
       },
       "outcome": "defer",
-      "message": "尚未上线过实验／改文案验证 → 暂缓把实验性表述写成对外承诺。"
+      "message": "尚未上线过实验／改文案验证 → 暂缓把实验性表述写成对外承诺。",
+      "gaps": [
+        "experiment"
+      ]
     },
     {
       "id": "R10-data-not-desensitized",
       "when": {
         "all": [
-          { "field": "dataDesensitizedForExternal", "eq": false }
+          {
+            "field": "dataDesensitizedForExternal",
+            "eq": false
+          }
         ]
       },
       "outcome": "defer",
-      "message": "数据尚未脱敏可对外 → 暂缓对外展示原始图／表，先完成脱敏与合规确认。"
+      "message": "数据尚未脱敏可对外 → 暂缓对外展示原始图／表，先完成脱敏与合规确认。",
+      "gaps": [
+        "desensitize"
+      ]
     },
     {
       "id": "R11-speed-claim-text-without-alignment",
       "when": {
         "all": [
-          { "field": "claimedSpeedText", "neq": "" },
-          { "any": [
-            { "field": "hasTaktNumber", "eq": false },
-            { "field": "hasRecentFalsePositiveSamples", "eq": false }
-          ]}
+          {
+            "field": "claimedSpeedText",
+            "neq": ""
+          },
+          {
+            "any": [
+              {
+                "field": "hasTaktNumber",
+                "eq": false
+              },
+              {
+                "field": "hasRecentFalsePositiveSamples",
+                "eq": false
+              }
+            ]
+          }
         ]
       },
       "outcome": "reject",
-      "message": "已填写速度话术，但节拍未对齐或无误报样本 → 拒单该速度话术，不得进入报价／宣传稿。"
+      "message": "已填写速度话术，但节拍未对齐或无误报样本 → 拒单该速度话术，不得进入报价／宣传稿。",
+      "gaps": [
+        "takt",
+        "samples"
+      ]
     },
     {
       "id": "R12-allow-basic-boundary-ok",
       "when": {
         "all": [
-          { "field": "hasTaktNumber", "eq": true },
-          { "field": "hasRecentFalsePositiveSamples", "eq": true },
-          { "field": "hasHumanRedlineApproval", "eq": true },
-          { "field": "dataDesensitizedForExternal", "eq": true },
-          { "field": "hasRunExperimentOrCopyTest", "eq": true },
-          { "field": "askIncludesPaymentOrLineParams", "eq": false }
+          {
+            "field": "hasTaktNumber",
+            "eq": true
+          },
+          {
+            "field": "hasRecentFalsePositiveSamples",
+            "eq": true
+          },
+          {
+            "field": "hasHumanRedlineApproval",
+            "eq": true
+          },
+          {
+            "field": "dataDesensitizedForExternal",
+            "eq": true
+          },
+          {
+            "field": "hasRunExperimentOrCopyTest",
+            "eq": true
+          },
+          {
+            "field": "askIncludesPaymentOrLineParams",
+            "eq": false
+          }
         ]
       },
       "outcome": "allow",
-      "message": "节拍、样本、红线、脱敏与实验均具备，且无越权诉求——可在已对齐范围内做有限对外承诺。"
+      "message": "节拍、样本、红线、脱敏与实验均具备，且无越权诉求——可在已对齐范围内做有限对外承诺。",
+      "gaps": []
     }
-  ]
+  ],
+  "gaps": {
+    "takt": {
+      "label": "实测产线节拍",
+      "action": "到产线实测节拍（cycle time），拿到数字再谈速度和节拍承诺。"
+    },
+    "samples": {
+      "label": "近两周误报样本表",
+      "action": "采集近两周连续良品／废品样本并标注，算出误报率再谈效果数字。"
+    },
+    "redline": {
+      "label": "内部红线审批",
+      "action": "找有权限的人批红线：哪些话能对外说、哪些不能。"
+    },
+    "desensitize": {
+      "label": "数据脱敏",
+      "action": "把要对外展示的图和表做脱敏，并完成合规确认。"
+    },
+    "screenshot": {
+      "label": "客户确认截图可公开",
+      "action": "书面问客户：脱敏截图能不能上公众号或宣传材料。"
+    },
+    "experiment": {
+      "label": "小范围实验或文案验证",
+      "action": "先小范围上线实验或验证文案，再把表述写成对外承诺。"
+    },
+    "scope": {
+      "label": "拆出越权诉求",
+      "action": "把支付、改产线参数这类诉求拆出去，另走审批流程。"
+    }
+  }
 }
